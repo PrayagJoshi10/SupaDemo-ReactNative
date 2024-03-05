@@ -1,14 +1,13 @@
 import React from 'react';
-import {SafeAreaView, StatusBar} from 'react-native';
+import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import AppProvider from './src/providers/AppProvider';
 import AppNavigator from './src/navigation/AppNavigator';
-// import AppNavigator from './src/navigation/AppNavigator';
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <AppProvider>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView style={{flex: 1}}>
+      <StatusBar barStyle="light-content" />
+      <SafeAreaView style={styles.container}>
         <AppNavigator />
       </SafeAreaView>
     </AppProvider>
@@ -16,3 +15,7 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+const styles = StyleSheet.create({
+  container: {flex: 1, backgroundColor: '#102C57'},
+});
