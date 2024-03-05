@@ -1,16 +1,53 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import {Session} from '@supabase/supabase-js';
+import React, {useEffect, useState} from 'react';
+import {supabase} from '../utils/supabase';
 
-interface Props {}
+interface AppContextProps {
+  session: Session | null;
+  setSession: React.Dispatch<React.SetStateAction<Session | null>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-const AppProvider = (props: Props) => {
+const AppContext = React.createContext<AppContextProps>({
+  session: null,
+  setSession: () => {},
+  isLoading: true,
+  setIsLoading: () => {},
+});
+
+const AppProvider = ({children}: any) => {
+  const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    supabase.auth.getSession().then(({data: {session}}) => {
+      setSession(session);
+      setIsLoading(false);
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setIsLoading(false);
+    });
+  }, []);
+
   return (
-    <View>
-      <Text>AppProvider</Text>
-    </View>
+    <AppContext.Provider
+      value={{
+        session,
+        setSession,
+        isLoading,
+        setIsLoading,
+      }}>
+      {children}
+    </AppContext.Provider>
   );
 };
 
-export default AppProvider;
+export const useAppProvider = () => {
+  return React.useContext(AppContext);
+};
 
-const styles = StyleSheet.create({});
+export default AppProvider;
