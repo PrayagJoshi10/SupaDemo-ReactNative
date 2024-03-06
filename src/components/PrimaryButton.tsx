@@ -1,16 +1,33 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text} from 'react-native';
 import React from 'react';
 
-interface Props {}
+interface Props {
+  title: string;
+  onPress: () => void;
+}
 
-const PrimaryButton = (props: Props) => {
+const PrimaryButton = ({title, onPress}: Props) => {
   return (
-    <View>
-      <Text>PrimaryButton</Text>
-    </View>
+    <Pressable style={styles.container} onPress={onPress}>
+      <Text style={styles.title}>{title}</Text>
+    </Pressable>
   );
 };
 
 export default PrimaryButton;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#DAC0A3',
+    borderRadius: 25,
+  },
+  title: {
+    color: '#000000',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+});
