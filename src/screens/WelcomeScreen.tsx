@@ -2,6 +2,7 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Header from '../components/Header';
 import PrimaryButton from '../components/PrimaryButton';
+import colors from '../utils/colors';
 
 interface Props {
   navigation: any;
@@ -44,7 +45,7 @@ export default WelcomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#102C57',
+    backgroundColor: colors.blue_500,
   },
   headerContainer: {
     marginTop: 25,
@@ -60,12 +61,12 @@ const styles = StyleSheet.create({
     width: 250,
   },
   title: {
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 22,
     fontWeight: '600',
   },
   description: {
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 16,
     fontWeight: '500',
     textAlign: 'center',

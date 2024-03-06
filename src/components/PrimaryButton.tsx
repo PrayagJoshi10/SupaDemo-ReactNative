@@ -1,5 +1,6 @@
 import {Pressable, StyleSheet, Text} from 'react-native';
 import React from 'react';
+import colors from '../utils/colors';
 
 interface Props {
   title: string;
@@ -22,11 +23,11 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#DAC0A3',
+    backgroundColor: colors.camel_500,
     borderRadius: 25,
   },
   title: {
-    color: '#000000',
+    color: colors.black,
     fontSize: 20,
     fontWeight: 'bold',
   },
