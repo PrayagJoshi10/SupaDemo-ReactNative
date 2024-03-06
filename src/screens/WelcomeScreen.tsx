@@ -1,10 +1,13 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Header from '../components/Header';
+import PrimaryButton from '../components/PrimaryButton';
 
-interface Props {}
+interface Props {
+  navigation: any;
+}
 
-const WelcomeScreen = (props: Props) => {
+const WelcomeScreen = ({navigation}: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -21,6 +24,16 @@ const WelcomeScreen = (props: Props) => {
           Experience Supabase's Authentication, Database & Storage Features in
           React Native.
         </Text>
+      </View>
+      <View style={styles.buttonsContainer}>
+        <PrimaryButton
+          title={'Login'}
+          onPress={() => navigation.navigate('Login')}
+        />
+        <PrimaryButton
+          title={'Sign Up'}
+          onPress={() => navigation.navigate('Signup')}
+        />
       </View>
     </View>
   );
@@ -56,5 +69,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     textAlign: 'center',
+  },
+  buttonsContainer: {
+    marginTop: 50,
+    marginBottom: 20,
+    gap: 20,
+    paddingHorizontal: 35,
   },
 });
