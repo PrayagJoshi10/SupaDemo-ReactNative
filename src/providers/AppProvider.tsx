@@ -23,15 +23,21 @@ const AppProvider = ({children}: any) => {
     // eslint-disable-next-line @typescript-eslint/no-shadow
     supabase.auth.getSession().then(({data: {session}}) => {
       setSession(session);
-      setIsLoading(false);
+      isLoading &&
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
     });
 
     // eslint-disable-next-line @typescript-eslint/no-shadow
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      setIsLoading(false);
+      isLoading &&
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
     });
-  }, []);
+  }, [isLoading]);
 
   return (
     <AppContext.Provider
