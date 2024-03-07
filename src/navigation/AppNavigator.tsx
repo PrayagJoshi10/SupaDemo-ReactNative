@@ -1,5 +1,8 @@
-import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import React, {useEffect} from 'react';
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import SplashScreen from '../screens/SplashScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import LoginScreen from '../screens/LoginScreen';
@@ -9,25 +12,41 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useAppProvider} from '../providers/AppProvider';
 
 const Stack = createNativeStackNavigator();
-
 const AppNavigator: React.FC = () => {
+  const navigationRef = useNavigationContainerRef();
   const {isLoading, session} = useAppProvider();
-  if (isLoading) {
-    return <SplashScreen />;
-  }
+
+  useEffect(() => {
+    const route = navigationRef.getCurrentRoute();
+    if (!isLoading) {
+      if (session) {
+        if (route?.name === 'HomeScreen') {
+          return;
+        }
+        navigationRef.resetRoot({
+          index: 4,
+          routes: [{name: 'HomeScreen'}],
+        });
+      } else {
+        if (route?.name === 'Welcome') {
+          return;
+        }
+        navigationRef.resetRoot({
+          index: 1,
+          routes: [{name: 'Welcome'}],
+        });
+      }
+    }
+  }, [isLoading, navigationRef, session]);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        {session ? (
-          <Stack.Screen name="HomeScreen" component={HomeScreen} />
-        ) : (
-          <>
-            <Stack.Screen name="Welcome" component={WelcomeScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Signup" component={SignupScreen} />
-          </>
-        )}
+        <Stack.Screen name="Splash" component={SplashScreen} />
+        <Stack.Screen name="Welcome" component={WelcomeScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Signup" component={SignupScreen} />
+        <Stack.Screen name="HomeScreen" component={HomeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
