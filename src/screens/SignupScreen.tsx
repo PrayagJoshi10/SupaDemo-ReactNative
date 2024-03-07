@@ -1,4 +1,7 @@
 import {
+  ActivityIndicator,
+  Alert,
+  Dimensions,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -11,16 +14,86 @@ import colors from '../utils/colors';
 import Header from '../components/Header';
 import CustomInput from '../components/CustomInput';
 import PrimaryButton from '../components/PrimaryButton';
+import {supabase} from '../utils/supabase';
 
 interface Props {
   navigation: any;
 }
 
+const screen_height = Dimensions.get('window').height;
+const screen_width = Dimensions.get('window').width;
 const SignupScreen = ({navigation}: Props) => {
   const [fullName, setFullName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const validateEmail = () => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      );
+  };
+
+  const signUpWithEmail = async () => {
+    setLoading(true);
+    setError('');
+    const {
+      data: {session},
+      error: signUpError,
+    } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+
+    if (signUpError) {
+      Alert.alert(signUpError.message);
+      setLoading(false);
+      return;
+    }
+
+    if (!session) {
+      Alert.alert('No session!');
+      setLoading(false);
+      return;
+    }
+
+    const {error: insertError} = await supabase.from('users').insert({
+      id: session.user.id,
+      name: fullName,
+      email,
+      phone,
+    });
+
+    if (insertError) {
+      Alert.alert(insertError.message);
+      setLoading(false);
+      return;
+    }
+    setLoading(false);
+  };
+
+  const onSignUp = () => {
+    if (!fullName) {
+      setError('Name is required');
+      return;
+    } else if (!email) {
+      setError('Email is required');
+      return;
+    } else if (!validateEmail()) {
+      setError('Please enter a valid email');
+      return;
+    } else if (!password) {
+      setError('Password is required');
+      return;
+    } else {
+      signUpWithEmail();
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -49,11 +122,9 @@ const SignupScreen = ({navigation}: Props) => {
           />
           <CustomInput label="Phone No" value={phone} onChangeText={setPhone} />
         </View>
+        <Text style={styles.error}>{error}</Text>
         <View style={styles.buttonContainer}>
-          <PrimaryButton
-            title="Sign Up"
-            onPress={() => console.log('signup')}
-          />
+          <PrimaryButton title="Sign Up" onPress={onSignUp} />
           <View style={styles.bottomTextContainer}>
             <Text style={styles.bottomLabel}>Aleady have an account?</Text>
             <Text
@@ -65,6 +136,11 @@ const SignupScreen = ({navigation}: Props) => {
         </View>
         <View style={styles.footer} />
       </ScrollView>
+      {loading && (
+        <View style={styles.loader}>
+          <ActivityIndicator size={'large'} color={colors.camel_500} />
+        </View>
+      )}
     </KeyboardAvoidingView>
   );
 };
@@ -119,6 +195,12 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 50,
   },
+  error: {
+    color: 'red',
+    fontSize: 14,
+    fontWeight: '400',
+    marginTop: 10,
+  },
   bottomTextContainer: {
     marginTop: 35,
     width: '100%',
@@ -142,5 +224,14 @@ const styles = StyleSheet.create({
   },
   footer: {
     marginBottom: 50,
+  },
+  loader: {
+    position: 'absolute',
+    height: screen_height,
+    width: screen_width,
+    backgroundColor: colors.white,
+    opacity: 0.3,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
