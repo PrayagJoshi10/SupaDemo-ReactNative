@@ -14,6 +14,11 @@ import {supabase} from '../utils/supabase';
 import {useAppProvider} from '../providers/AppProvider';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {decode} from 'base64-arraybuffer';
+import {
+  fetchUserData,
+  updateSupabaseImage,
+  uploadSupabaseImage,
+} from '../utils/service';
 
 interface user {
   name: string;
@@ -40,16 +45,16 @@ const HomeScreen = () => {
 
   useEffect(() => {
     const getUser = async () => {
-      const {data, error} = await supabase
-        .from('users')
-        .select()
-        .eq('id', session?.user.id);
-      if (error) {
-        Alert.alert(error.message);
-        return;
+      try {
+        const userData = await fetchUserData(session?.user.id);
+
+        if (userData) {
+          setUser(userData);
+          userData.profile_image && getSignedUrl(userData.profile_image);
+        }
+      } catch (error: any) {
+        Alert.alert('Error fetching user data:', error.message);
       }
-      setUser(data[0]);
-      data[0]?.profile_image && getSignedUrl(data[0]?.profile_image);
     };
 
     getUser();
@@ -86,35 +91,6 @@ const HomeScreen = () => {
     return null;
   }
 
-  const updateSupabaseImage = async (imageName: any, base64: any) => {
-    const {error} = await supabase.storage
-      .from('images')
-      .update(`${imageName}`, base64, {
-        contentType: 'image/png',
-      });
-
-    if (error) {
-      console.log('[uploadToSupabase] update: ', error);
-      return false;
-    }
-
-    return true;
-  };
-
-  const uploadSupabaseImage = async (imageName: any, base64: any) => {
-    const {error} = await supabase.storage
-      .from('images')
-      .upload(`${imageName}`, base64, {
-        contentType: 'image/png',
-      });
-
-    if (error) {
-      console.log('[uploadToSupabase] upload: ', error);
-      return false;
-    }
-    return true;
-  };
-
   const uploadImage = async (image: any) => {
     const res = decode(image.assets[0].base64);
 
@@ -146,18 +122,12 @@ const HomeScreen = () => {
       return;
     }
 
-    const {data, error: getUserError} = await supabase
-      .from('users')
-      .select()
-      .eq('id', session?.user.id);
-    if (getUserError) {
-      Alert.alert(getUserError.message);
-      setLoading(false);
-      return;
-    }
+    const userData = await fetchUserData(session?.user.id);
 
-    data && setUser(data[0]);
-    getSignedUrl(imageName);
+    if (userData) {
+      setUser(userData);
+      userData?.profile_image && getSignedUrl(userData.profile_image);
+    }
   };
 
   const getSignedUrl = async (image: string) => {
