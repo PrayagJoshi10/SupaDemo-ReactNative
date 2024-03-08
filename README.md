@@ -1,79 +1,86 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# React Native Supabase Demo App
 
-# Getting Started
+This React Native application serves as a demonstration of various features provided by Supabase including authentication, database, and storage.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+- Sign Up
 
-## Step 1: Start the Metro Server
+<img src="./signup.gif" alt="StyleChange GIF" height="500" width="250">
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+- Login
 
-To start Metro, run the following command from the _root_ of your React Native project:
+<img src="./login.gif" alt="StyleChange GIF" height="500" width="250">
 
-```bash
-# using npm
-npm start
+- Upload
 
-# OR using Yarn
-yarn start
-```
+<img src="./upload.gif" alt="StyleChange GIF" height="500" width="250">
 
-## Step 2: Start your Application
+## Features
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+- **Authentication**: Users can sign up, log in, and log out using email/password authentication.
+- **Database**: CRUD operations with a database hosted on Supabase.
+- **Storage**: Upload and update files to Supabase storage.
 
-### For Android
+## Requirements
 
-```bash
-# using npm
-npm run android
+- Node.js
+- npm or yarn
+- React Native development environment set up
 
-# OR using Yarn
-yarn android
-```
+## Installation
 
-### For iOS
+1. Clone the repository:
 
-```bash
-# using npm
-npm run ios
+   ```bash
+   git clone https://github.com/PrayagJoshi10/SupaDemo-ReactNative.git
+   ```
 
-# OR using Yarn
-yarn ios
-```
+2. Navigate to the project directory:
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+   ```bash
+   cd SupaDemo-ReactNative
+   ```
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+3. Install dependencies using yarn:
 
-## Step 3: Modifying your App
+   ```bash
+   yarn install
+   ```
 
-Now that you have successfully run the app, let's modify it.
+## Usage
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+1. Set up environment variables:
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+   - Create a .env file in the root directory.
+   - Add your Supabase credentials to the .env file:
 
-## Congratulations! :tada:
+   ```
+   SUPABASE_URL=
+   SUPABASE_ANON_KEY=
+   ```
 
-You've successfully run and modified your React Native App. :partying_face:
+2. Start the Metro bundler:
 
-### Now what?
+   ```bash
+   npx react-native start
+   ```
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+3. Run the application on a connected emulator or device:
 
-# Troubleshooting
+   ```bash
+   npx react-native run-android
+   # or
+   npx react-native run-ios
+   ```
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+## Dependencies
 
-# Learn More
+- React Navigation: For managing navigation in the React Native app.
+- Supabase: @supabase/supabase-js
+- base64-arraybuffer
+- react-native-image-picker
+- @react-native-async-storage/async-storage
+- react-native-url-polyfill
 
-To learn more about React Native, take a look at the following resources:
+## Author
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Prayag Joshi
